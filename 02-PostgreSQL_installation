@@ -1,1 +1,53 @@
+Check the official repo at:
 
+https://www.postgresql.org/download/linux/redhat/
+
+yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+yum repolist /// Shows all enabled repositories
+
+yum install -y postgresql12-server postgresql12 /// Install server & client
+
+/usr/pgsql-12/bin/postgresql-12-setup initdb /// Initialize the database
+
+vi /var/lib/pgsql/12/data/pg_hba.conf /// Edit Database Permissions
+
+--------------------------------------------------------------------------------------------------------------------------
+
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     trust   >>>>>> Check company´s security policy to set this
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            trust   >>>>>> Check company´s security policy to set this
+# IPv6 local connections:
+host    all             all             ::1/128                 trust   >>>>>> Check company´s security policy to set this
+# Allow replication connections from localhost, by a user with the
+# replication privilege.
+local   replication     all                                     peer
+host    replication     all             127.0.0.1/32            ident
+host    replication     all             ::1/128                 ident
+--------------------------------------------------------------------------------------------------------------------------
+
+More info here:
+
+https://www.postgresql.org/docs/12/auth-pg-hba-conf.html
+
+systemctl enable postgresql-12 /// Start Porstgresql automatically after system reboot
+
+systemctl start postgresql-12 /// Start Porstgresql now
+
+systemctl status postgresql-12 /// Shows Porstgresql running status
+
+--------------------------------------------------------------------------------------------------------------------------
+ps -ef | grep -i postgres /// Shows the "postgres" filtered process status
+
+postgres  4712     1  0 05:45 ?        00:00:00 /usr/pgsql-12/bin/postmaster -D /var/lib/pgsql/12/data/
+postgres  4713  4712  0 05:45 ?        00:00:00 postgres: logger
+postgres  4715  4712  0 05:45 ?        00:00:00 postgres: checkpointer
+postgres  4716  4712  0 05:45 ?        00:00:00 postgres: background writer
+postgres  4717  4712  0 05:45 ?        00:00:00 postgres: walwriter
+postgres  4718  4712  0 05:45 ?        00:00:00 postgres: autovacuum launcher
+postgres  4719  4712  0 05:45 ?        00:00:00 postgres: stats collector
+postgres  4720  4712  0 05:45 ?        00:00:00 postgres: logical replication launcher
+root      4726  4392  0 05:47 pts/0    00:00:00 grep --color=auto -i postgres
